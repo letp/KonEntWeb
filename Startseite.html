@@ -1,32 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Onlineshop</title>
+	<meta charset="UTF-8">
+	<title>Onlineshop</title>
+	
+	<style>
+
+	</style>
+
 </head>
 <body>
 <!-- Peter --> 
-	<header>
-	    
+	
+	 <nav>   
         <a
             href="#"><img 
-            src="#">
+            src="WebContent/home/img/Buch.png">
         </a>
         
-        <label for="suche">Suchen:
-        	<input id="suche" name="suche" size="60">
-        </label>
-        
-      
-	
-	</header>
-
-	<nav>
-		<div class=content_left>
+        <div class=content_left>
 		<a
 			href="#"
 			>Kategorien 
-		</a>    
+		</a> 
+        
+        <label for="suche">
+        	<input id="suche" name="suche" size="60">
+        </label>
+   
 		<a
 	    	href="#"
 	        >Kaufen
@@ -35,20 +36,12 @@
 	        href="#"
 	        >Verkaufen
 	    </a>
-	    <a
-	        href="#"
-	        >Info
-	    </a>
+
 	    <a
 	        href="#"
 	        >Support
 	    </a>
-	    <a
-	        href="#"
-	        >Hilfe
-	    </a>
-	    </div>
-	    <div class=content_right >
+	   
 	    <a 
 	    	href="#"
 	    	>Login
@@ -57,7 +50,34 @@
         	href="#"
         	>Einkaufswagen
         </a>
-        </div>
 	</nav>
+	<header>
+		<h1 role="heading" align="center">
+			Student Book Store
+		</h1>
+	</header>
+	
+	<!--  vgl. https://www.w3schools.com/howto/howto_js_slideshow.asp -->
+	<div class=slideshow-news>
+		<div class="slider">
+			<div class="bildnummer">1 / 3</div>
+			<img src="#" style="width:100%;max-height:200px" >
+			<div class="text">News,Angebote</div>
+		</div>	
+		
+		<a class="prev" onclick="next(-1)">&#10094;</a>
+  		<a class="next" onclick="next(1)">&#10095;</a>
+	</div>
+	
+	<div class=BeliebteArtikel>
+		
+  		<h2 class=beliebteArtikel role="heading">
+    	<span class="a-color-base">
+      		Beliebteste Artikel
+   		</span>
+   		</h2>
+   		<hr/>
+	</div>
+
 </body>
 </html>
