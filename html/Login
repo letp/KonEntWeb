@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login</title>
+</head>
+
+<body>
+
+	<h1>
+    	Login
+    </h1>
+    <label for="Email">
+
+        Email: <br>
+        <input id="email" name="email" size="30">
+
+    </label><br>
+    <label for="Passwort">
+
+        Passwort: <br>
+        <input id="passwort" name="passwort" size="30">
+
+    </label><br><br>
+     
+    <button 
+    	id="login" type="button">Lgoin!
+    </button> <br>
+     
+    <a
+    	href="#"> Noch kein Konto? Jetzt registrieren!
+    </a>
+
+</body>
+</html>
+
