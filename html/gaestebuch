@@ -1,0 +1,40 @@
+<html lang="de">
+	<head>
+		<meta charset="utf-8" />
+		<title>Lasse dein Kommentar ab - Gaestebuch</title>
+        <link rel="stylesheet" type="text/css" href="base.css">
+	</head>
+	<body>
+        
+        <div id="navigation" class="navigation">
+        Navigation:
+        
+         <ul>
+             <lu><a href="login.html">Login</a></lu>
+             <lu><a href="startseite.html">Startseite</a></lu>
+            <lu><a href="account.html">Account</a></lu>
+            <lu><a href="buch.html">Buch</a></lu>
+            </ul> 
+        
+        </div>
+       
+        
+        
+        <div id="main" class="main marginAndPadding">
+            <h1>Erzähl von deinen Erfahrungen</h1>
+        </div>
+        <form class="formular" name="sendData" method="POST" action="/path/to/serverUrl">
+                    <input name="textField" type="text" placeholder="Mein Name" />
+                    <br/>
+                    <br/>
+                    <input name="textField" type="text" placeholder="Titel" />
+                    <br/>
+                    <br/>
+                    <textarea name="textArea" placeholder="Mehrzeiliges Feld"></textarea>
+                    <br/>  
+                    <br/> 
+                    <button type="reset">Abbruch</button>
+                    <button type="submit">Senden</button>
+         </form>
+    </body>
+</html>
