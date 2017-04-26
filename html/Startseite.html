@@ -2,10 +2,27 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Onlineshop</title>
+	<title>Onlineshop für gebraucht Bücher</title>
 	
 	<style>
-
+	.kategorie {
+	    position: relative;
+	    display: inline-block;
+	}
+	
+	.dropdown_kategorie {
+	    display: none;
+	    position: absolute;
+	    background-color: #f9f9f9;
+	    min-width: 160px;
+	    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	    padding: 12px 16px;
+	    z-index: 1;
+	}
+	
+	.kategorie:hover .dropdown_kategorie {
+	    display: block;
+	}
 	</style>
 
 </head>
@@ -15,14 +32,24 @@
 	 <nav>   
         <a
             href="#"><img 
-            src="WebContent/home/img/Buch.png">
+            src="img/Buch.png">
         </a>
         
         <div class=content_left>
-		<a
-			href="#"
-			>Kategorien 
-		</a> 
+		<div class=kategorie>
+			<a
+				href="#"
+				>Kategorien 
+			</a> 
+			<div class=dropdown_kategorie>
+				<p>Archäologie</p>
+				<p>Bauingeniieur</p>
+				<p>Chemie</p>
+				<p>Deutsch</p>
+				<p>Englisch</p>
+			</div>
+			</div>
+		</div>
         
         <label for="suche">
         	<input id="suche" name="suche" size="60">
@@ -43,7 +70,7 @@
 	    </a>
 	   
 	    <a 
-	    	href="#"
+	    	href="Login.html"
 	    	>Login
         </a>
         <a
