@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bezahlseite</title>
+</head>
+
+<body>
+
+<h1>Jetzt nur noch bezahlen</h1>
+
+<form action="button.htm">
+<div>
+<button name="Bezahlmich" type="button"
+  value="Bezahl" onClick="paymentmethoden.href='http://paymentmethoden.de/'">
+ <p><img src="bezahlen.gif" width="106" height="109" border="0" alt="BezahlButton Logo"><br>
+ <b> Bezahlseite</b></p>
+</button>
+</div>
+</form>
+
+</body>
+</html>
+
+//Auswahl von Zahlungsart
+
+<div class"header">
+<h2 class="ng-bind">Auswahl der Bezahlart</h3>
+<span ng-class="{ 'status-icon':!isFilled(), 'complete-icon' : isFilled() }" class="complete-icon"></span>
+</div>
+
+
