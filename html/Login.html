@@ -1,35 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Login</title>
+<meta charset="UTF-8">
+<title>Login</title>
+<link rel="stylesheet" type="text/css" href="login.css">
 </head>
-
 <body>
 
-	<h1>
-    	Login
-    </h1>
-    <label for="Email">
+<div class="login">
+<form action=LoginServlet>
+    <div class="container">
+    	<h2>Login</h2><br>
+	    <label> Email </label><br>
+	    <input type="text" placeholder="Email" name="email" required><br>
+	
+	    <label>Passwort </label><br>
+	    <input type="password" placeholder="Passwort" name="passwort" required><br>
 
-        Email: <br>
-        <input id="email" name="email" size="30">
-
-    </label><br>
-    <label for="Passwort">
-
-        Passwort <br>
-        <input id="passwort" name="passwort" size="30">
-
-    </label><br><br>
-     
-    <button 
-    	id="login" type="button">Lgoin!
-    </button> <br>
-     
+	     
+	    <button type="submit">Login!</button><br>
+    </div> 
+    <br>
     <a
-    	href="#"> Noch kein Konto? Jetzt registrieren!
+    	href="Account.html"> Noch kein Konto? Jetzt registrieren!
     </a>
-
+</form>
+</div>
 </body>
 </html>
-
