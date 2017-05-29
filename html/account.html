@@ -1,43 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Account</title>
+<meta charset="UTF-8">
+<title>Account</title>
+<link rel="stylesheet" type="text/css" href="login.css">
 </head>
-
 <body>
 
-	<h1>
-    	Neuer Account
-    </h1>
-    <label for="Name">
 
-        Name <br>
-        <input id="name" name="name" size="30">
+<div class="login">
+<form method="post" action="../../AccountServlet">
+	<h1>Neuer Account</h1>
 
-    </label><br>
-    <label for="Email">
-
-        Email <br>
-        <input id="email" name="email" size="30">
-
-    </label><br>
-    <label for="Passwort">
-
-        Passwort <br>
-        <input id="passwort" name="passwort" size="30">
-
-    </label><br>
-    <label for="Passwort2">
-
-       Wiederhole Passwort <br>
-        <input id="passwort2" name="passwort2" size="30">
-
-    </label><br><br>
-     
-    <button 
-    	id="account" type="button">Registrieren!
-    </button> <br>
-     
+    <label>Name <br></label>
+    <input type="text" name="name" required autofocus>
+    <br>
+    <label>Vorname</label> <br>
+    <input type="text" name="vorname" required>
+    <br>
+    <label>Email</label> <br>
+    <input type="text"  name="email" required>
+    <br>
+    <label>Straße </label> <br>
+    <input type="text" name="strasse" required>
+    <br>
+    <label>Hausnummer</label>
+    <br>
+    <input type="text" name="hnr" required>
+    <br>
+    <label>Stadt </label><br>
+    <input type="text" name="stadt" required>
+    <br>
+    <label>Postleitzahl </label>
+    <br>
+    <input type="text" name="plz" required>
+	<br>
+    <label>Passwort </label>
+    <br>
+    <input type="password" name="passwort" required>
+	<br>
+    <label>Wiederhole Passwort</label> <br>
+    <input type="password" name="passwort2" required>
+	<br>
+	<br>
+    
+    <button type="submit" id="account" type="button">Registrieren!</button> 
+    <br>
+</form>
+</div>      
     <a
     	href="#"> ABG
     </a>
