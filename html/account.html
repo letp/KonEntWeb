@@ -4,6 +4,28 @@
 <meta charset="UTF-8">
 <title>Account</title>
 <link rel="stylesheet" type="text/css" href="login.css">
+<style type="text/css">
+.nameangeben{
+	display: none;
+}
+</style>
+<script>
+function accountpruf() {
+	if (document.getElementById("name").length == 0){
+		document.getElementById("nameangeben").style.display = "initial";
+	}
+}
+function check() {
+	  if (document.getElementById("passwort").value ==
+	    document.getElementById("passwort2").value) {
+	    document.getElementById("message").style.color = "green";
+	    document.getElementById("message").innerHTML = "matching";
+	  } else {
+	    document.getElementById("message").style.color = "red";
+	    document.getElementById("message").innerHTML = "not matching";
+	  }
+	}
+</script>
 </head>
 <body>
 
@@ -11,9 +33,11 @@
 <div class="login">
 <form method="post" action="../../AccountServlet">
 	<h1>Neuer Account</h1>
-
+	<div class="nameangeben" id="nameangeben">
+	<a>Name angeben!</a>
+	</div><br>
     <label>Name <br></label>
-    <input type="text" name="name" required autofocus>
+    <input type="text" name="name" id="name" required autofocus>
     <br>
     <label>Vorname</label> <br>
     <input type="text" name="vorname" required>
@@ -26,21 +50,22 @@
     <br>
     <label>Hausnummer</label>
     <br>
-    <input type="text" name="hnr" required>
+    <input type="text" name="hausnummer" required>
     <br>
     <label>Stadt </label><br>
     <input type="text" name="stadt" required>
     <br>
     <label>Postleitzahl </label>
     <br>
-    <input type="text" name="plz" required>
+    <input type="text" name="postleitzahl" required>
 	<br>
     <label>Passwort </label>
     <br>
-    <input type="password" name="passwort" required>
+    <input type="password" name="passwort" onkeyup="check()" required>
 	<br>
     <label>Wiederhole Passwort</label> <br>
-    <input type="password" name="passwort2" required>
+    <input type="password" name="passwort2" onkeyup="check()" required>
+    <span id="message"></span>
 	<br>
 	<br>
     
