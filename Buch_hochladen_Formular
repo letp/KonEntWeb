@@ -1,0 +1,173 @@
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+
+<style>
+
+	label{
+	
+		min-width:6em;
+		display: inline-block;
+		text-align: left;
+	}
+
+	input {
+		width: 20 em;
+		
+		}
+		
+	textarea {
+		widht: 20em;
+		border: 1px solid black;
+		}
+
+	input[type="checkbox"], button[type="submit"]{
+		margin-left: 8em;
+	}
+	
+	
+	label {
+		vertical-align: top;
+	}
+	
+	input[type="checkbox"], button[type="submit"]{
+		
+		margin-left: 8em;
+	
+	
+	}
+	
+	
+	button {
+	
+		width: 10em;
+	
+	}
+	
+	
+	/* Formular optisch stylen. Vorgehen von innen nach außen*/
+	
+	fieldset {
+		widh: 30em;
+		padding-top: 1.5em;
+		padding-left: 1.5em;
+		background: #e6eeff;
+		border: 1px solid #000330;
+		border-radius: 5px;
+		}
+	
+	legend {
+	
+		background:white;
+		padding: 0.2em;
+		border: 1px solid #000330;
+		border-radius: 5px;
+	
+	
+	}
+	
+	
+	button:hover {
+	background: #c9c9c9;
+	border: 2px solid #6c6c6c;
+	}
+	
+	button:active {
+		background: #8f8f8f;
+	
+	}
+	
+/*Damit Felder nicht zu dicht folgen*/
+	form div {
+		padding: 0.2em;
+	}
+	
+	
+</style>
+
+<body>
+
+
+
+
+	<form id = "myForm" method = "post">
+	
+		<fieldset><legend> Buch_hochladen</legend>
+		
+		<div>
+		
+		<label for = "kategorie"> Kategorie:</label>
+		<select multiple name="kategorie" id="kategorie" size="3">
+			<option value="geschichtswissenschaften" selected > Geschichtswissenschaften</option>
+			<option value="informatik und Programmieren"> Informatik und Programmieren</option>
+			<option value="sprach-und Literaturwissenschaften"> Sprach- und Literaturwissenschaften</option>
+		
+		</select>
+		
+		</div>
+		
+		
+		<div>
+		<label for = "bild">Bild:</label>
+		<input type="image" name="bild" id="bild" placeholder="Bild hochladen" required>
+		</div>
+		
+	
+		<div>
+			<label for = "isdn"> ISDN:</label>
+		<input type="text" name="isdn" id="isdn" placeholder="ISDN-Nummer eingeben" required>
+		</div>
+		
+		
+		<div>
+		
+		<label for = "buch_name"> Titel</label>
+		<input type="text" name="buch_name" id="buch_name" placeholder=" Name des Buches " required>
+		
+		</div>
+		
+		
+		
+		
+		<div>
+			<label for = "autor"> Autor:</label>
+		<input type="text" name="autor" id="autor" placeholder="Name des Autors" required>
+		<label for="autor"></label>
+		</div>
+		
+		
+		<div class = "form_radio">
+			<label> Zustand:</label>
+			<input type="radio" name="zustand" id = "neu" value="neu" required>
+			<label for="neu"> Neu</label>
+			<input type="radio" name="zustand" id = "gebraucht" value="gebraucht" required>
+			<label for="gebraucht"> Gebraucht</label>
+		</div>
+		
+		<div>
+		<label class= "textarea" for = "beschreibung"> Kurzbeschreibung:</label>
+		<textarea name="beschreibung" id="beschreibung" placeholder="Hier Kurzbeschreibung des Buches" rows="8" required></textarea>
+		<label for="beschreibung"></label>
+		</div>
+		
+		<div>
+		<button name="hochladen" type="submit">Hochladen</button>
+		<button name="löschen" type="löschen">Daten löschen</button>
+		</div>
+		
+	
+		</fieldset>
+	
+	
+	</form>
+
+</body>
+</html>
