@@ -40,19 +40,19 @@ public class AccountServlet extends HttpServlet {
 	    
 		form.setName(request.getParameter("name"));
 		form.setVorname(request.getParameter("vorname"));
-		/**form.setEmail(request.getParameter("email"));
+		form.setEmail(request.getParameter("email"));
 		form.setStrasse(request.getParameter("strasse"));
-		form.setHnr(request.getParameter("hnr"));
+		form.setHnr(request.getParameter("hausnummer"));
 		form.setStadt(request.getParameter("stadt"));
-		form.setPlz(request.getParameter("plz"));
+		form.setPlz(request.getParameter("postleitzahl"));
 		form.setPasswort(request.getParameter("passwort"));
-		form.setPasswort2(request.getParameter("passwort2"));*/
+		form.setPasswort2(request.getParameter("passwort2"));
 		
 		persist(form);
 		
 		request.setAttribute("form", form);
 		
-		final RequestDispatcher dispatcher = request.getRequestDispatcher("outputaccount.jsp");
+		final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Konto.jsp");
 		dispatcher.forward(request, response);
 		
 	}
@@ -61,10 +61,17 @@ public class AccountServlet extends HttpServlet {
 	    String[] generatedkeys = new String[] {"id"};
 
         try(Connection con = ds.getConnection();
-        PreparedStatement p = con.prepareStatement("INSERT INTO accounts (name,vorname) VALUES (?,?)",generatedkeys)){
+        PreparedStatement p = con.prepareStatement("INSERT INTO accounts (name,vorname,email,strasse,hausnummer,stadt,postleitzahl,passwort,passwort2) VALUES (?,?,?,?,?,?,?,?,?)",generatedkeys)){
         
         p.setString(1, form.getName());
         p.setString(2, form.getVorname());
+        p.setString(3, form.getEmail());
+        p.setString(4, form.getStrasse());
+        p.setString(5, form.getHnr());
+        p.setString(6, form.getStadt());
+        p.setString(7, form.getPlz());
+        p.setString(8, form.getPasswort());
+        p.setString(9, form.getPasswort2());
         p.executeUpdate();
         
         ResultSet rs = p.getGeneratedKeys();
@@ -87,3 +94,4 @@ public class AccountServlet extends HttpServlet {
 	}
 
 }
+
