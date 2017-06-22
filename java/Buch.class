@@ -1,0 +1,98 @@
+
+
+
+
+
+
+public class Buch{
+
+	
+	
+	private String kategorie;
+	private byte[] bild;
+	private String isbn;
+	private String buch_name;
+	private String name;
+	private String zustand;
+	private String beschreibung;
+	
+
+	
+public String getKategorie() {
+	
+	return kategorie;
+	
+}
+
+public void setKategorie(String kategorie) {
+	
+	this.kategorie = kategorie;
+	
+	
+}
+
+public String getBuch_name() {
+	return buch_name;
+}
+
+public void setBuch_name(String buch_name) {
+	
+	this.buch_name= buch_name;
+
+}
+
+
+public String getIsbn(){
+		return isbn;
+	}
+	
+public void setIsbn(String isbn) {
+	
+	this.isbn = isbn;
+}
+
+public String getName() {
+	return name;
+}
+	
+public void setName(String name) {
+	this.name = name;
+}
+
+public String getZustand() {
+	return zustand;
+}
+	
+
+public void setZustand(String zustand) {
+	this.zustand = zustand;
+	
+}
+
+public String getBeschreibung() {
+	
+	return beschreibung;
+}
+
+
+public void setBeschreibung(String beschreibung) {
+	this.beschreibung = beschreibung;
+}
+
+public byte[] getBild() {
+	return bild;
+}
+
+public void setBild(byte[] bild) {
+	this.bild = bild;
+}
+
+
+
+
+	
+	
+	
+	
+	
+}
