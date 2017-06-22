@@ -1,0 +1,126 @@
+
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import javax.annotation.Resource;
+import javax.resource.cci.ResultSet;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import javax.sql.DataSource;
+
+/**
+ * Servlet implementation class Buecher_hinzufuegen
+ */
+
+@WebServlet("/Buecher_hinzfuegen")
+public class Buecher_hinzufuegen extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	
+	@Resource(lookup="jdbc/MySQLPool")
+	DataSource ds;
+       
+
+	Buch neu = new Buch();
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public Buecher_hinzufuegen() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		//die Angaben werden zu einem Account geholt
+		request.setCharacterEncoding("UTF-8");
+		
+
+	neu.setKategorie(request.getParameter("Kategorie"));
+	
+	neu.setIsbn(request.getParameter("Isbn"));
+	neu.setBuch_name(request.getParameter("Titel"));
+	neu.setName(request.getParameter("Name"));
+	neu.setZustand(request.getParameter("Zustand"));
+	neu.setBeschreibung(request.getParameter("Beschreibung"));
+	final Part filepart = request.getPart("Bild");
+	
+	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	 //Auslesen der übertragenen Daten und Speicherung in einem byte[]
+	 try{
+		 InputStream in = filepart.getInputStream();
+		 int i = 0;
+		 while((i = in.read()) !=-1){
+			 baos.write(i);
+		 }
+		 neu.setBild(baos.toByteArray());
+		 baos.flush();
+	 }catch(IOException ex){
+		 throw new ServletException(ex.getMessage());
+	 }
+	
+	persist(neu);
+	request.setAttribute("neu",  neu);
+	
+	// Alle übertragenen Felder ermitteln
+	final RequestDispatcher dispatcher = request.getRequestDispatcher("outputaccount.jsp");
+	dispatcher.forward(request,  response);
+	}
+	
+	
+	private void persist(Buch neu) throws ServletException {
+		String[] generatedkeys = new String[]{"id"};
+		System.out.print("test");
+		try(Connection con = ds.getConnection("root","gulsen");
+				PreparedStatement p = con.prepareStatement("INSERT INTO buch (kategorie, isbn, buch_name, name, zustand, beschreibung) VALUES (?,?,?,?,?,?)", generatedkeys)) {
+			
+			p.setString(1,  neu.getKategorie());
+			
+			p.setString(3,  neu.getIsbn());
+			p.setString(4,  neu.getBuch_name());
+			p.setString(5,  neu.getName());
+			p.setString(6,  neu.getZustand());
+			p.setString(7,  neu.getBeschreibung());
+			p.executeUpdate();
+			
+			
+			ResultSet rs = (ResultSet) p.getGeneratedKeys();
+			
+			while(rs.next()) {
+				neu.setIsbn(rs.getString(1));
+			}
+			con.close();
+		} catch (Exception ex) {
+			
+			throw new ServletException(ex.getMessage());
+		}
+		
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+	
+	
+	
+	
+
+}
