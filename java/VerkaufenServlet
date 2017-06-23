@@ -47,18 +47,72 @@ public class VerkaufenServlet extends HttpServlet {
 		buch.setBeschreibung(request.getParameter("beschreibung"));
 		buch.setPreis(request.getParameter("preis"));
 		
-		persist(buch);
-		request.setAttribute("form", buch);
-		session.setAttribute("buch", buch);
-		final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Buch.jsp");
-		dispatcher.forward(request, response);
+		ResultSet rs = null;
+		
+		 /**
+         * Überprüfen ob das <buch schon vorhanden ist, falls ja persistExemplar(), falls nicht persistBuch() ausführen 
+         */
+        try(Connection con = ds.getConnection();
+                
+                PreparedStatement p = con.prepareStatement("SELECT * FROM bucher WHERE isbn = ?")){
+                
+                p.setString(1, request.getParameter("isbn"));
+                
+                rs = p.executeQuery();
+                if(rs.next()){
+                    persistExemplar(buch);
+                    request.setAttribute("buch", buch);
+                    session.setAttribute("buch", buch);
+                    final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Buch.jsp");
+                    dispatcher.forward(request, response);
+                }else{
+                    persistBuch(buch);
+                    request.setAttribute("buch", buch);
+                    session.setAttribute("buch", buch);
+                    final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Buch.jsp");
+                    dispatcher.forward(request, response);
+                }
+                
+                
+         } catch (Exception ex) {
+              // TODO Auto-generated catch block
+              throw new ServletException(ex.getMessage());
+         }
+	
 		}
 	
-	private void persist(Buch form) throws ServletException {
+	
+	private void persistExemplar(Buch form) throws ServletException {
+	    String table = form.getIsbn();
+	    String[] generatedKeys = new String[] {"id"};
+	    
+	    /**
+         * isbn wird nur in exemplarliste geschrieben, 
+         */
+	    try (Connection con = ds.getConnection();
+                PreparedStatement p3 = con.prepareStatement("INSERT INTO " + table +" (titel, beschreibung, zustand, preis) VALUES (?,?,?,?)",generatedKeys)){
+                
+                p3.setString(1, form.getTitel());
+                p3.setString(2, form.getBeschreibung());
+                p3.setString(3, form.getZustand());
+                p3.setString(4, form.getPreis());
+                p3.executeUpdate();
+                ResultSet rs = p3.getGeneratedKeys();
+                while (rs.next()) {
+                    form.setId(rs.getLong(1));
+                }
+            } catch (Exception ex){
+                throw new ServletException(ex.getMessage());
+            }       
+	    
+	}
+	
+	
+	private void persistBuch(Buch form) throws ServletException {
 	    String[] generatedKeys = new String[] {"id"};
 	    String table = form.getIsbn(); 
 	    /**
-	     * isbn in bucher liste schreibe, hier muss noch überprüft werden, ob isbn schon in der Liste vorhanden ist
+	     * isbn in bucher liste schreibe, 
 	     */
 	    try (Connection con = ds.getConnection();
 	            PreparedStatement p1 = con.prepareStatement("INSERT INTO bucher (isbn) VALUES (?)")){
