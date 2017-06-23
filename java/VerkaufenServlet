@@ -1,0 +1,117 @@
+
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import javax.annotation.Resource;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+/**
+ * Servlet implementation class VerkaufenServlet
+ */
+@WebServlet("/VerkaufenServlet")
+public class VerkaufenServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+    
+	@Resource(lookup="jdbc/MyTHIPool")
+    DataSource ds;
+	
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public VerkaufenServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		HttpSession session = request.getSession();
+	    Buch buch = new Buch();
+		
+		buch.setTitel(request.getParameter("titel"));
+		buch.setIsbn(request.getParameter("isbn"));
+		buch.setZustand(request.getParameter("zustand"));
+		buch.setBeschreibung(request.getParameter("beschreibung"));
+		buch.setPreis(request.getParameter("preis"));
+		
+		persist(buch);
+		request.setAttribute("form", buch);
+		session.setAttribute("buch", buch);
+		final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Buch.jsp");
+		dispatcher.forward(request, response);
+		}
+	
+	private void persist(Buch form) throws ServletException {
+	    String[] generatedKeys = new String[] {"id"};
+	    String table = form.getIsbn(); 
+	    /**
+	     * isbn in bucher liste schreibe, hier muss noch überprüft werden, ob isbn schon in der Liste vorhanden ist
+	     */
+	    try (Connection con = ds.getConnection();
+	            PreparedStatement p1 = con.prepareStatement("INSERT INTO bucher (isbn) VALUES (?)")){
+	            
+	            p1.setString(1, form.getIsbn());
+	            p1.executeUpdate();
+	            
+	        } catch (Exception ex){
+	            throw new ServletException(ex.getMessage());
+	        }
+	    
+	    
+	    /**
+	     * falls das Buchnoch nicht vorhanden ist wird eine neue Tabelle für die Exemplare dieses Buchs erstellt
+	     */
+	    try (Connection con = ds.getConnection();
+	           
+	        PreparedStatement p2 = con.prepareStatement("CREATE TABLE " + table +" (id INTEGER , titel VARCHAR(50), beschreibung VARCHAR(200), zustand VARCHAR(50), preis VARCHAR(50))")){
+	        
+	        p2.executeUpdate();
+	        
+	    } catch (Exception ex){
+	        throw new ServletException(ex.getMessage());
+	    }
+	    /**
+	     * und hier der erste Eintrag in diese Tabelle 
+	     */
+        try (Connection con = ds.getConnection();
+                PreparedStatement p3 = con.prepareStatement("INSERT INTO " + table +" (titel, beschreibung, zustand, preis) VALUES (?,?,?,?)",generatedKeys)){
+                
+                p3.setString(1, form.getTitel());
+                p3.setString(2, form.getBeschreibung());
+                p3.setString(3, form.getZustand());
+                p3.setString(4, form.getPreis());
+                p3.executeUpdate();
+                ResultSet rs = p3.getGeneratedKeys();
+                while (rs.next()) {
+                    form.setId(rs.getLong(1));
+                }
+            } catch (Exception ex){
+                throw new ServletException(ex.getMessage());
+            }	    
+	    
+
+
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
