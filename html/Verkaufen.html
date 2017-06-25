@@ -2,92 +2,59 @@
 <html>
 <head>
 <title>Page Title</title>
+	<link rel="stylesheet" type="text/css" href="nav.css"> 
 </head>
 <body>
 
-<nav>   
-
-        <a
-            href="#"><img 
-            src="WebContent/home/img/Buch.png">
-        </a>
-
-		<a
-			href="#"
-			>Kategorien 
-		</a> 
-
-        <label for="suche">
-        	<input id="suche" name="suche" size="60">
-        </label>
-
-		<a
-	    	href="#"
-	        >Kaufen
-		</a>
-
-		<a
-	        href="#"
-	        >Verkaufen
-	    </a>
-
-	    <a
-	        href="#"
-	        >Support
-	    </a>
-
-	    <a 
-	    	href="#"
-	    	>Login
-        </a>
-
-        <a
-        	href="#"
-        	>Einkaufswagen
-        </a>
-	</nav>
-
-	<h3>
-        Buch verkaufen
-	</h3>
-    
-    <label for="titel">
-
-        Titel: <br>
-        <input id="titel" name="titel" size="30">
-
-	</label><br>
-    <label for="isbn">
-
-        ISBN: <br>
-        <input id="isbn" name="isbn" size="30">
-
-	</label><br>
-    <label for="isbn">
-
-        Beschreibung: <br>
-        <input id="beschreibung" name="beschreibung" size="30">
-
-	</label><br>
-	<div class=zustand>
-		<div class=zus>
-			<a
-				href="#"
-				>Zustand 
-			</a> 
-			<div class=dropdown_zustand>
-				<p>Gut</p>
-				<p>Mäßig</p>
-				<p>Schlecht</p>
+	 <ul>   
+        <li><a href="Startseite.html"><img src="Buch.png" width="20" height="20"> </a></li>
+		<li class=kategorie>
+			<a href="#" class="drop">Kategorien</a> 
+			<div class=dropdown_kategorie>
+				<a href="#">Archäologie</a>
+				<a href="#">Bauingeniieur</a>
+				<a href="#">Chemie</a>
+				<a href="#">Deutsch</a>
+				<a href="#">Englisch</a>
 			</div>
-		</div>
-	</div>
+		</li>
+        
+        <li><label for="suche">
+          	<input id="suche" name="suche" size="40">
+        </label></li>
+   
+		<li><a href="#">Kaufen</a></li>
+		<li><a href="Verkaufen.html">Verkaufen</a></li>
+	    <li><a href="Login.html">Login</a></li>
+        <li><a href="#" >Einkaufswagen</a></li>
+	</ul>
+	
+	
+<form method="post" action="../../VerkaufenServlet">
+	<h3>Neues Buch verkaufen</h3>
     
-    <button 
-    	id="bild" type="button">Bild hinzufügen
-	</button> <br>
-    <button 
-    	id="hochlagen" type="button">Buch verkaufen!
-	</button> <br>
+    <label for="titel">Titel: </label><br>
+    <input id="titel" name="titel" size="30">
+	<br>
+    <label for="isbn">ISBN: </label><br>
+    <input id="isbn" name="isbn" size="30">
+	<br>
+    <label for="isbn">Beschreibung: </label><br>
+    <input id="beschreibung" name="beschreibung" size="30">
+	<br>
+	<label for="zustand">Zustand: </label>
+    <select id="zustand" name="zustand">
+        <option value="gut">Gut</option>
+        <option value="mas">Mäßig</option>
+        <option value="schlecht">Schlecht</option>
+    </select>
+    <br>
+    <label for="preis">Preis: </label><br>
+    <input id="preis" name="preis" size="30">
+
+	<br>
+    <button type="submit" id="hochladen" type="button">Buch verkaufen!</button> <br>
+</form>
+
 </body>
 </html>
