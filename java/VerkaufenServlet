@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;
@@ -21,6 +22,9 @@ import javax.sql.DataSource;
 @WebServlet("/VerkaufenServlet")
 public class VerkaufenServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+    Integer i = -1;
+    ArrayList<Buch> ergebnisse = new ArrayList<Buch>();
     
 	@Resource(lookup="jdbc/MyTHIPool")
     DataSource ds;
@@ -32,6 +36,7 @@ public class VerkaufenServlet extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
+    
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -61,14 +66,20 @@ public class VerkaufenServlet extends HttpServlet {
                 rs = p.executeQuery();
                 if(rs.next()){
                     persistExemplar(buch);
-                    request.setAttribute("buch", buch);
-                    session.setAttribute("buch", buch);
+                    request.setAttribute("buchwahl", buch);
+                    session.setAttribute("buchwahl", buch);
+                    exempl(request.getParameter("isbn"));
+                    session.setAttribute("ergebnisse", ergebnisse);
+                    session.setAttribute("exemplarZahl", i);
                     final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Buch.jsp");
                     dispatcher.forward(request, response);
                 }else{
                     persistBuch(buch);
-                    request.setAttribute("buch", buch);
-                    session.setAttribute("buch", buch);
+                    request.setAttribute("buchwahl", buch);
+                    session.setAttribute("buchwahl", buch);
+                    exempl(request.getParameter("isbn"));
+                    session.setAttribute("ergebnisse", ergebnisse);
+                    session.setAttribute("exemplarZahl", i);
                     final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Buch.jsp");
                     dispatcher.forward(request, response);
                 }
@@ -115,9 +126,10 @@ public class VerkaufenServlet extends HttpServlet {
 	     * isbn in bucher liste schreibe, 
 	     */
 	    try (Connection con = ds.getConnection();
-	            PreparedStatement p1 = con.prepareStatement("INSERT INTO bucher (isbn) VALUES (?)")){
+	            PreparedStatement p1 = con.prepareStatement("INSERT INTO bucher (isbn, titel) VALUES (?,?)")){
 	            
 	            p1.setString(1, form.getIsbn());
+	            p1.setString(2, form.getTitel());
 	            p1.executeUpdate();
 	            
 	        } catch (Exception ex){
@@ -126,7 +138,7 @@ public class VerkaufenServlet extends HttpServlet {
 	    
 	    
 	    /**
-	     * falls das Buchnoch nicht vorhanden ist wird eine neue Tabelle für die Exemplare dieses Buchs erstellt
+	     * neue Tabelle für die Exemplare dieses Buchs wird erstellt
 	     */
 	    try (Connection con = ds.getConnection();
 	           
@@ -159,6 +171,22 @@ public class VerkaufenServlet extends HttpServlet {
 
 
 	}
+    public void exempl(String tabelle) throws ServletException{
+        ResultSet rs = null;
+        try(Connection con = ds.getConnection();
+                PreparedStatement p = con.prepareStatement("SELECT * FROM "+tabelle)){
+                rs = p.executeQuery();
+                while(rs.next()){
+                        Buch buch = new Buch();
+                        buch.setTitel(rs.getString("titel"));
+                        ergebnisse.add(buch);
+                        i=i+1;
+                }
+         } catch (Exception ex) {
+              // TODO Auto-generated catch block
+              throw new ServletException(ex.getMessage());
+         }
+    }
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
