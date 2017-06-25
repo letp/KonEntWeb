@@ -10,17 +10,18 @@
 	
 		
 		input{
-		
+		height: 20px;
 		width: 300px;
 	    margin: 8px 0;
 	    box-sizing: border-box;
+	    padding: 12px;
 		}
 		
 		<!-- style für slider -->
 		* {box-sizing:border-box}
 		
 		.slideshow-news {
-			  max-width: 1000px;
+			  
 			  position: relative;
 			  margin: auto;
 			}
@@ -68,23 +69,35 @@
 		  top: 0;
 		}
 		
-		BeliebteArtikel{
+		figure{
 			  margin: 0;
 			}
 			
-			BeliebteArtikel.bild{
+			figure.bild{
 			  display: inline-block;
 			  padding: 10px;
-			  width: 33%;
+			  width: 250px;
+			  hight: 250px;
 			  border: 1px solid gainsboro;
 			}
+			
+		footer {
+		  background-color: #333;
+		  text-align: center;
+		  padding: 10px;
+		  bottom: 0;
+		  left: 0;
+		  right: 0;
+		}
+
 	</style>
 	
 </head>
 <body>
 <!-- Peter --> 
-	
-	 <ul>   
+
+<nav>	
+	 <ul class="nav">   
         <li><a href="Startseite.html"><img src="Buch.png" width="20" height="20" alt="Logo"> </a></li>
 		<li class=kategorie>
 			<a href="#" class="drop">Kategorien</a> 
@@ -96,16 +109,17 @@
 				<a href="#">Englisch</a>
 			</div>
 		</li>
-        
-        <li><label for="suche">
-          	<input id="suche" name="suche" size="40">
-        </label></li>
-   
-		<li><a href="#">Kaufen</a></li>
-		<li><a href="Verkaufen.html">Verkaufen</a></li>
-	    <li><a href="Login.html">Login</a></li>
-        <li><a href="#" >Einkaufswagen</a></li>
+   		<li>
+   		<form method="post" action="../../SucheServlet">
+	   		<input id="suche" name="suche" placeholder="Titel oder ISBN">
+	   		<button class="suche" type="button" type="submit">Suchen</button>
+   		</form></li>
+        <li class="right"><a href="#" >Einkaufswagen</a></li>
+        <li class="right"><a id="konto" href="Login.html">Login</a></li>
+        <li class="right"><a href="Verkaufen.html">Verkaufen</a></li>
+        <li class="right"><a href="#">Kaufen</a></li>
 	</ul>
+</nav>
 	<header>
 		<h1 role="heading" align="center">
 			Student Book Store
@@ -122,7 +136,7 @@
 		</div>	
 		<div class="slider fade">
 			<div class="bildnummer">2 / 3</div>
-			<img src="welcome.jpg" style="width:100%;max-height:400px" >
+			<img src="Buch.png" style="width:100%;max-height:400px" >
 			<div class="text">News,Angebote</div>
 		</div>	
 		<div class="slider fade">
@@ -131,8 +145,9 @@
 			<div class="text">News,Angebote</div>
 		</div>	
 		
-		<a class="prev" onclick="next(-1)">&#10094;</a>
-  		<a class="next" onclick="next(1)">&#10095;</a>
+		<button class="prev" onclick="plusSlides(-1)">&#10094;</button>
+		<button class="next" onclick="plusSlides(1)">&#10095;</button>
+		
   		
 	</div>
 	<div style="text-align:center">
@@ -140,33 +155,63 @@
   <span class="dot" onclick="currentSlide(2)"></span> 
   <span class="dot" onclick="currentSlide(3)"></span> 
 </div>
-	
-	<figure class=BeliebteArtikel>
-		
-  		<h2 class=beliebteArtikel role="heading">
-    	<span class="a-color-base">
-      		Beliebteste Artikel
-   		</span>
+
+
+
+
+
+<form method="post" action="../../SucheServlet">
+	<h1>Buch suchen</h1>
+    <input id="suche1" name="suche1" placeholder="Titel oder ISBN">
+	<br>
+    
+    <button type="submit" id="account" type="button">Suchen</button> 
+    <br>
+</form>
+<h2 class=beliebteArtikel role="heading">
+    <span>Beliebteste Artikel</span>
    		</h2>
    		<hr/>
+   		<figure>
+   		
    		<figure class="bild">
-   			<img src="Buch.png" alt="Buch1">
-   			<figcaption>Buch 1</figcaption>
+   			<img src="Buch.png" width="200" height="200" alt="Buch1">
+   			<a href="../../BuchServlet" >Kaufen!</a> 
+   		</figure>
+   		
+   		<figure class="bild">
+   			<img src="Buch.png" width="200" height="200" alt="Buch1">
+   			<a href="../../BuchServlet" >Kaufen!</a> 
    		</figure>
    		<figure class="bild">
-   			<img src="Buch.png" alt="Buch1">
-   			<figcaption>Buch 2</figcaption>
+   			<img src="Buch.png" width="200" height="200" alt="Buch1">
+   			<a href="../../BuchServlet" >Kaufen!</a> 
    		</figure>
    		<figure class="bild">
-   			<img src="Buch.png" alt="Buch1">
-   			<figcaption>Buch 3</figcaption>
-   		</figure>
-   		<figure class="bild">
-   			<img src="Buch.png" alt="Buch1">
-   			<figcaption>Buch 4</figcaption>
+   			<img src="Buch.png" width="200" height="200" alt="Buch1">
+   			<a href="../../BuchServlet" >Kaufen!</a> 
    		</figure>
 	</figure>
+	
+	<br>
+
+	<footer>
+	<br>
+	Student Book Store 2017
+	<br>
+	<a href="#">Buch verkaufen</a>
+	<br>
+	<a href="#">Buch kaufen</a>
+	<br>
+	<a href="Login.html">Login</a>
+	<br>
+	<a href="#">Registrieren</a>
+	<br>
+	</footer>
+
 	<script>
+	
+	
 		var slideIndex = 1;
 		showSlides(slideIndex);
 		
@@ -187,12 +232,9 @@
 		  for (i = 0; i < slides.length; i++) {
 		      slides[i].style.display = "none";  
 		  }
-		  for (i = 0; i < dots.length; i++) {
-		      dots[i].className = dots[i].className.replace(" active", "");
-		  }
 		  slides[slideIndex-1].style.display = "block";  
-		  dots[slideIndex-1].className += " active";
 	}
+
 	</script>
 </body>
 </html>
