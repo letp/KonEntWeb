@@ -1,14 +1,16 @@
 public class Buch {
-    private String name;
+    private long id;
+    private String titel;
     private String isbn;
     private String zustand;
     private String beschreibung;
+    private String Preis;
     
-    public String getName() {
-        return name;
+    public String getTitel() {
+        return titel;
     }
-    public void setName(String name) {
-        this.name = name;
+    public void setTitel(String titel) {
+        this.titel = titel;
     }
     public String getIsbn() {
         return isbn;
@@ -27,5 +29,17 @@ public class Buch {
     }
     public void setBeschreibung(String beschreibung) {
         this.beschreibung = beschreibung;
+    }
+    public String getPreis() {
+        return Preis;
+    }
+    public void setPreis(String preis) {
+        Preis = preis;
+    }
+    public long getId() {
+        return id;
+    }
+    public void setId(long id) {
+        this.id = id;
     }
 }
