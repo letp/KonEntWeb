@@ -1,5 +1,7 @@
 
 
+/** Peter */
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -60,11 +62,13 @@ public class LoginServlet extends HttpServlet {
 	                   form.setHnr(rs.getString("hausnummer"));
 	                   form.setStadt(rs.getString("stadt"));
 	                   form.setPlz(rs.getString("postleitzahl"));
-	                   session.setAttribute("form", form);
+	                   session.setAttribute("account", form);
+	                   session.setAttribute("logged", 1);
 	                   final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Konto.jsp");
 	                   dispatcher.forward(request, response);
 	               }else{
-	                   final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Login.html");
+	                   session.setAttribute("logfalsch", 1);
+	                   final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Login.jsp");
                        dispatcher.forward(request, response);
 	               }
 	               
