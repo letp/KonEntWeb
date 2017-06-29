@@ -1,3 +1,4 @@
+/** Peter */
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -10,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 /**
@@ -35,6 +37,8 @@ public class AccountServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Alle Angaben zu neuem Account holen
 	    request.setCharacterEncoding("UTF-8");
+	    HttpSession session = request.getSession();
+	    ResultSet rs = null;
 	    
 	    Account form = new Account();
 	    
@@ -48,12 +52,41 @@ public class AccountServlet extends HttpServlet {
 		form.setPasswort(request.getParameter("passwort"));
 		form.setPasswort2(request.getParameter("passwort2"));
 		
-		persist(form);
+		if (request.getParameter("passwort").equals(request.getParameter("passwort2"))){
+		    session.setAttribute("pwfalsch", 0);
 		
-		request.setAttribute("form", form);
 		
-		final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Konto.jsp");
-		dispatcher.forward(request, response);
+		try(Connection con = ds.getConnection();
+                
+                PreparedStatement p = con.prepareStatement("SELECT * FROM accounts WHERE email = ?")){
+                
+                p.setString(1, request.getParameter("email"));
+                
+                rs = p.executeQuery();
+                if(rs.next()){
+                    session.setAttribute("vorhanden", 1);
+                    final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Account.jsp");
+                    dispatcher.forward(request, response);
+                }else{
+                    persist(form);
+                    request.setAttribute("form", form);
+                    session.setAttribute("vorhanden", 0);
+                    session.setAttribute("account", form);
+                    session.setAttribute("logged", 1);
+                    final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Konto.jsp");
+                    dispatcher.forward(request, response);
+                }
+                
+                
+         } catch (Exception ex) {
+              // TODO Auto-generated catch block
+              throw new ServletException(ex.getMessage());
+         }
+		}else{
+            session.setAttribute("pwfalsch", 1);
+            final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Account.jsp");
+            dispatcher.forward(request, response);
+        }
 		
 	}
 	
@@ -94,4 +127,3 @@ public class AccountServlet extends HttpServlet {
 	}
 
 }
-
