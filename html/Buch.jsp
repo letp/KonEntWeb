@@ -1,8 +1,10 @@
+<!-- Peter -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<base href="${pageContext.request.requestURI}" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Buch</title>
 	<link rel="stylesheet" type="text/css" href="nav.css"> 
@@ -22,28 +24,8 @@
 	</style>
 </head>
 <body>
- <ul>   
-        <li><a href="Startseite.html"><img src="Buch.png" width="20" height="20" > </a></li>
-		<li class=kategorie>
-			<a href="#" class="drop">Kategorien</a> 
-			<div class=dropdown_kategorie>
-				<a href="#">Archäologie</a>
-				<a href="#">Bauingeniieur</a>
-				<a href="#">Chemie</a>
-				<a href="#">Deutsch</a>
-				<a href="#">Englisch</a>
-			</div>
-		</li>
-        
-        <li><label for="suche">
-          	<input id="suche" name="suche" size="40">
-        </label></li>
-   
-		<li><a href="#">Kaufen</a></li>
-		<li><a href="Verkaufen.html">Verkaufen</a></li>
-	    <li><a href="Login.html">Login</a></li>
-        <li><a href="#" >Einkaufswagen</a></li>
-	</ul>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<jsp:include page="navigation.jsp"></jsp:include>
 
 	<h2>
         	${buchwahl.titel}
@@ -60,10 +42,10 @@
         </h4>
             	
         <p>
+        	Autor: ${buchwahl.autor}<br>
         	Beschreibung: ${buchwahl.beschreibung} <br>
             ISBN: ${buchwahl.isbn} <br>
-            Zustand: ${buchwahl.zustand}<br>
-            Preis: ${buchwahl.preis}<br>
+            Kategorie: ${buchwahl.kategorie}<br>
         </p>
 
         
@@ -72,46 +54,54 @@
     <div>
     <h3>Exemplare</h3>
     <%
-	int a = (Integer)session.getAttribute("exemplarZahl")+1;
-	for(int i=0;i<a;i++){
+    if ((Integer)session.getAttribute("exemplarZahl")!= -1){
+
 	%>
-	<a href="#">${exemplare.get(i).titel}</a><br>
+	<form method="post" action="../../KaufServlet">
+	<select id="ex" name="ex">
+	<c:forEach items="${exemplare}" var="e">
+	<option >${e.id} | ${e.titel} | Zustand: ${e.zustand} | Preis: ${e.preis}</option>
+	</c:forEach>
+	</select>
+    <button type="submit" id="account" type="button">Exemplar kaufen!</button> 
+    <br>
+	</form>
 	<%  
-	}
+    }else{
+    %>
+    <a>Leider sind im Moment keine Exemplare vorhanden!</a>
+    <%
+    }
 	%>
     
     </div>
-
-<form method="post" action="KaufServlet">
-    <button type="submit" id="account" type="button">Jetzt kaufen!</button> 
-    <br>
-</form>
-
-    <div class="anderekunden">
-        <h3>
-        	Auch interessant
-        </h3>
-        <hr/>
-        <figure class=BeliebteArtikel>
-   		<figure class="bild" >
-   			<a href="Buch.html"><img src="Buch.png" width="200" height="200" alt="Buch1"></a>
-   			<figcaption>Buch 1</figcaption>
+<hr>
+<h2 class=beliebteArtikel role="heading">
+    <span>Beliebteste Artikel</span>
+   		</h2>
+   		
+   		<figure>
+   		
+   		<figure class="bild">
+   			<img src="Buch.png" width="200" height="200" alt="Buch1"><br>
+   			<a href="../../BuchServlet?param1=${beliebt.get(0).isbn}" >${beliebt.get(0).titel}</a> 
+   		</figure>
+   		
+   		<figure class="bild">
+   			<img src="Buch.png" width="200" height="200" alt="Buch1"><br>
+   			<a href="../../BuchServlet?param1=${beliebt.get(1).isbn}" >${beliebt.get(1).titel}</a> 
    		</figure>
    		<figure class="bild">
-   			<img src="Buch.png" width="200" height="200" alt="Buch1">
-   			<figcaption>Buch 2</figcaption>
+   			<img src="Buch.png" width="200" height="200" alt="Buch1"><br>
+   			<a href="../../BuchServlet?param1=${beliebt.get(2).isbn}" >${beliebt.get(2).titel}</a> 
    		</figure>
    		<figure class="bild">
-   			<img src="Buch.png" width="200" height="200" alt="Buch1">
-   			<figcaption>Buch 3</figcaption>
-   		</figure>
-   		<figure class="bild">
-   			<img src="Buch.png" width="200" height="200" alt="Buch1">
-   			<figcaption>Buch 4</figcaption>
+   			<img src="Buch.png" width="200" height="200" alt="Buch1"><br>
+   			<a href="../../BuchServlet?param1=${beliebt.get(3).isbn}" >${beliebt.get(3).titel}</a> 
    		</figure>
 	</figure>
-        
-    </div>
+	
+	<br>
     <hr />
     
     <br>
