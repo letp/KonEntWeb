@@ -1,0 +1,83 @@
+/** Kübra  */
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+
+import javax.annotation.Resource;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+/**
+ * Servlet implementation class KaufServlet
+ */
+@WebServlet("/KaufServlet")
+public class KaufServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	   @Resource(lookup="jdbc/MyTHIPool")
+	    DataSource ds;  
+	   
+	   String warenpreis = "";
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public KaufServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+	    HttpSession session = request.getSession();
+	    /**
+	    Integer i = (Integer) session.getAttribute("warenZahl")+1;
+	    ArrayList<Buch> waren = (ArrayList<Buch>) session.getAttribute("waren");
+	    */
+	    String id = request.getParameter("ex");
+	    id = id.substring(0, id.indexOf(" "));
+	    
+	    Buch kauf = (Buch) session.getAttribute("buchwahl");
+	    kauf.setId(Long.parseLong(id));
+	    
+	    ArrayList<Buch> waren = new ArrayList<Buch>();
+	    waren.add(kauf);
+	    session.setAttribute("waren", waren); 
+        final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Warenkorb.jsp");
+        dispatcher.forward(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+	
+    public void preis(String tabelle, Long id) throws ServletException{
+        ResultSet rs = null;
+        try(Connection con = ds.getConnection();
+                PreparedStatement p = con.prepareStatement("SELECT * FROM "+tabelle+" WHERE id = ?")){
+                p.setLong(1, id);
+                rs = p.executeQuery();
+                while(rs.next()){
+                        warenpreis = rs.getString("preis");
+                }
+         } catch (Exception ex) {
+              // TODO Auto-generated catch block
+              throw new ServletException(ex.getMessage());
+         }
+    }
+}
