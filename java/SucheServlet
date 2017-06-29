@@ -1,4 +1,6 @@
 
+/** Peter */
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -38,28 +40,27 @@ public class SucheServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    HttpSession session = request.getSession();
         
-        Integer i = -1;
-        ArrayList<Buch> ergebnisse = new ArrayList<Buch>();
+        Integer suchanzahl = -1;
+        ArrayList<Buch> bucher = new ArrayList<Buch>();
         
            ResultSet rs = null;
            try(Connection con = ds.getConnection();
                    /**
                    *"SELECT * FROM bucher WHERE isbn LIKE %" +isbn + "% OR titel LIKE %" + titel +"%"
                    */
-                   PreparedStatement p = con.prepareStatement("SELECT * FROM bucher WHERE isbn LIKE ?")){
+                   PreparedStatement p = con.prepareStatement("SELECT * FROM bucher WHERE titel LIKE ?")){
                    p.setString(1, "%"+request.getParameter("suche1")+"%");
                    rs = p.executeQuery();
                    while(rs.next()){
                            Buch buch = new Buch();
                            buch.setIsbn(rs.getString("isbn"));
                            buch.setTitel(rs.getString("titel"));
-                           session.setAttribute(("Buch"+i.toString()), buch);
-                           ergebnisse.add(buch);
-                           i=i+1;
+                           bucher.add(buch);
+                           suchanzahl=suchanzahl+1;
                    }
-                   session.setAttribute("ergebnisse", ergebnisse);
+                   session.setAttribute("bucher", bucher);
                    
-                   session.setAttribute("i", i);
+                   session.setAttribute("suchanzahl", suchanzahl);
                    final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Suchergebnisse.jsp");
                    dispatcher.forward(request, response);
             } catch (Exception ex) {
