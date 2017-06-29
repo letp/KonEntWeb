@@ -1,3 +1,4 @@
+/** Peter */
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -26,7 +27,7 @@ public class BuchServlet extends HttpServlet {
     DataSource ds;  
 	
     Integer i = -1;
-    ArrayList<Buch> ergebnisse = new ArrayList<Buch>();
+    ArrayList<Buch> exemplare = new ArrayList<Buch>();
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -43,13 +44,8 @@ public class BuchServlet extends HttpServlet {
 	       request.setCharacterEncoding("UTF-8");
 	        HttpSession session = request.getSession();
 	        Buch buch = new Buch();
-	        
-	        buch.setTitel(request.getParameter("titel"));
-	        buch.setIsbn(request.getParameter("isbn"));
-	        buch.setZustand(request.getParameter("zustand"));
-	        buch.setBeschreibung(request.getParameter("beschreibung"));
-	        buch.setPreis(request.getParameter("preis"));
-	        
+
+	        String isbn = request.getParameter("param1");
 	        ResultSet rs = null;
 	        
 	         /**
@@ -57,16 +53,20 @@ public class BuchServlet extends HttpServlet {
 	         */
 	        try(Connection con = ds.getConnection();
 	                
-	                PreparedStatement p = con.prepareStatement("SELECT * FROM test")){
+	                PreparedStatement p = con.prepareStatement("SELECT * FROM "+isbn)){
 	                
 	                
 	                rs = p.executeQuery();
 	                if(rs.next()){
+	                    buch.setIsbn(isbn);
+	                    buch.setTitel(rs.getString("titel"));
+	                    buch.setBeschreibung("beschreibung");
+	                    buch.setKategorie("kategorie");
 	                    request.setAttribute("buchwahl", buch);
 	                    session.setAttribute("buchwahl", buch);
-	                    exempl("test");
-	                    session.setAttribute("ergebnisse", ergebnisse);
-	                    session.setAttribute("i", i);
+	                    exempl(isbn);
+	                    session.setAttribute("exemplare", exemplare);
+	                    session.setAttribute("exemplarZahl", i);
 	                    final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Buch.jsp");
 	                    dispatcher.forward(request, response);
 	                }
@@ -77,13 +77,17 @@ public class BuchServlet extends HttpServlet {
 	}
     public void exempl(String tabelle) throws ServletException{
         ResultSet rs = null;
+        exemplare.clear();
         try(Connection con = ds.getConnection();
                 PreparedStatement p = con.prepareStatement("SELECT * FROM "+tabelle)){
                 rs = p.executeQuery();
                 while(rs.next()){
                         Buch buch = new Buch();
                         buch.setTitel(rs.getString("titel"));
-                        ergebnisse.add(buch);
+                        buch.setPreis(rs.getString("preis"));
+                        buch.setZustand(rs.getString("zustand"));
+                        buch.setId(rs.getInt(1));
+                        exemplare.add(buch);
                         i=i+1;
                 }
          } catch (Exception ex) {
