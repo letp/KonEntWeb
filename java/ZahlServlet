@@ -1,0 +1,140 @@
+/** Peter */
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import javax.annotation.Resource;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+/**
+ * Servlet implementation class ZahlServlet
+ */
+@WebServlet("/ZahlServlet")
+public class ZahlServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+    
+	@Resource(lookup="jdbc/MyTHIPool")
+    DataSource ds;   
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public ZahlServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+	      HttpSession session = request.getSession();
+	        ArrayList<Buch> waren = (ArrayList<Buch>) session.getAttribute("waren");
+	        String exemplar = "";
+	        String isbn ="";
+
+	       
+	       for(Buch buch : waren){
+	       exemplar = buch.getTitel();   
+	       isbn = buch.getIsbn();
+	       /**
+	        *Exemplar löschen
+	        */
+    	        try(Connection con = ds.getConnection();
+    	                
+    	                PreparedStatement p = con.prepareStatement("DELETE FROM "+isbn+" WHERE id = ?")){
+    	                
+    	                p.setLong(1, buch.getId());
+    	                
+    	                p.executeUpdate();	        
+    
+    	        } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+               
+               try(Connection con = ds.getConnection();
+                        
+                        PreparedStatement p = con.prepareStatement("UPDATE bucher SET gekauft = gekauft + 1 WHERE isbn = ?")){
+                       
+                        p.setString(1, buch.getTitel());
+                        
+                        p.executeUpdate();          
+    
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+    	        
+    	        /**
+    	         * aus Buchliste löschen falls letzes Exemplar--> exemplare suchen un im 2. Schritt aus Bücher tabelle löschen und Tabelle droppen
+    	         
+	           try(Connection con = ds.getConnection();
+	                    
+	                    PreparedStatement p = con.prepareStatement("SELECT * FROM "+exemplar)){
+	                    
+	                    rs = p.executeQuery();  
+
+	            } catch (SQLException e) {
+	                // TODO Auto-generated catch block
+	                e.printStackTrace();
+	            }
+	           
+	           try {
+	               
+	                 * hier if Abfrage ob ein exemplar vorhanden (lassen wir weg, damit Buch nicht geöscht wird)
+	                 
+                    if (!rs.isBeforeFirst()){
+                        try(Connection con = ds.getConnection();
+                                
+                                PreparedStatement p = con.prepareStatement("DELETE FROM bucher WHERE isbn = ?")){
+                                
+                                p.setString(1, buch.getIsbn());
+                                
+                                p.executeUpdate();  
+    
+                        } catch (SQLException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                        try(Connection con = ds.getConnection();
+                                
+                                PreparedStatement p = con.prepareStatement("DROP Table "+isbn)){
+                                
+                                p.executeUpdate();  
+    
+                        } catch (SQLException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+	           */
+	       }
+	        final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/paymentpage.html");
+	        dispatcher.forward(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
