@@ -1,0 +1,77 @@
+/** Peter */
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import javax.annotation.Resource;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+
+/**
+ * Servlet implementation class KategorieServlet
+ */
+@WebServlet("/KategorieServlet")
+public class KategorieServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+    
+    ArrayList<Buch> kategorienex = new ArrayList<Buch>();
+    
+    @Resource(lookup="jdbc/MyTHIPool")
+    DataSource ds; 
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public KategorieServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+        HttpSession session = request.getSession();
+        kategorienex.clear();
+ 
+        ResultSet rs = null;
+        
+        try(Connection con = ds.getConnection();
+                
+                PreparedStatement p = con.prepareStatement("SELECT * FROM bucher WHERE kategorie = ?")){
+                p.setString(1, request.getParameter("param"));
+                rs = p.executeQuery();
+                while(rs.next()){
+                    Buch kat = new Buch();
+                    kat.setTitel(rs.getString(2));
+                    kat.setIsbn(rs.getString(1));
+                    kategorienex.add(kat);
+                }
+                session.setAttribute("kategorienex", kategorienex);
+                final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Kategorie.jsp");
+                dispatcher.forward(request, response);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
