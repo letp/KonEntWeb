@@ -1,9 +1,11 @@
 
+/** Gülsen */
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.annotation.Resource;
@@ -24,7 +26,9 @@ public class VerkaufenServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
     Integer i = -1;
+    Integer katZahl = 0;
     ArrayList<Buch> ergebnisse = new ArrayList<Buch>();
+    ArrayList<String> kategorien = new ArrayList<String>();
     
 	@Resource(lookup="jdbc/MyTHIPool")
     DataSource ds;
@@ -51,6 +55,8 @@ public class VerkaufenServlet extends HttpServlet {
 		buch.setZustand(request.getParameter("zustand"));
 		buch.setBeschreibung(request.getParameter("beschreibung"));
 		buch.setPreis(request.getParameter("preis"));
+		buch.setKategorie(request.getParameter("kategorie"));
+		buch.setAutor(request.getParameter("autor"));
 		
 		ResultSet rs = null;
 		
@@ -69,8 +75,12 @@ public class VerkaufenServlet extends HttpServlet {
                     request.setAttribute("buchwahl", buch);
                     session.setAttribute("buchwahl", buch);
                     exempl(request.getParameter("isbn"));
-                    session.setAttribute("ergebnisse", ergebnisse);
+                    session.setAttribute("exemplare", ergebnisse);
                     session.setAttribute("exemplarZahl", i);
+                    session.setAttribute("kategorien", null);
+                    updateKat();
+                    session.setAttribute("kategorien", kategorien);
+                    session.setAttribute("kategorieZahl", katZahl);
                     final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Buch.jsp");
                     dispatcher.forward(request, response);
                 }else{
@@ -78,8 +88,12 @@ public class VerkaufenServlet extends HttpServlet {
                     request.setAttribute("buchwahl", buch);
                     session.setAttribute("buchwahl", buch);
                     exempl(request.getParameter("isbn"));
-                    session.setAttribute("ergebnisse", ergebnisse);
+                    session.setAttribute("exemplare", ergebnisse);
                     session.setAttribute("exemplarZahl", i);
+                    session.setAttribute("kategorien", null);
+                    updateKat();
+                    session.setAttribute("kategorien", kategorien);
+                    session.setAttribute("kategorieZahl", katZahl);
                     final RequestDispatcher dispatcher = request.getRequestDispatcher("home/html/Buch.jsp");
                     dispatcher.forward(request, response);
                 }
@@ -101,12 +115,13 @@ public class VerkaufenServlet extends HttpServlet {
          * isbn wird nur in exemplarliste geschrieben, 
          */
 	    try (Connection con = ds.getConnection();
-                PreparedStatement p3 = con.prepareStatement("INSERT INTO " + table +" (titel, beschreibung, zustand, preis) VALUES (?,?,?,?)",generatedKeys)){
+                PreparedStatement p3 = con.prepareStatement("INSERT INTO " + table +" (titel, beschreibung, zustand, preis, autor) VALUES (?,?,?,?,?)",generatedKeys)){
                 
                 p3.setString(1, form.getTitel());
                 p3.setString(2, form.getBeschreibung());
                 p3.setString(3, form.getZustand());
                 p3.setString(4, form.getPreis());
+                p3.setString(5, form.getAutor());
                 p3.executeUpdate();
                 ResultSet rs = p3.getGeneratedKeys();
                 while (rs.next()) {
@@ -126,10 +141,12 @@ public class VerkaufenServlet extends HttpServlet {
 	     * isbn in bucher liste schreibe, 
 	     */
 	    try (Connection con = ds.getConnection();
-	            PreparedStatement p1 = con.prepareStatement("INSERT INTO bucher (isbn, titel) VALUES (?,?)")){
+	            PreparedStatement p1 = con.prepareStatement("INSERT INTO bucher (isbn, titel, kategorie, gekauft) VALUES (?,?,?,?)")){
 	            
 	            p1.setString(1, form.getIsbn());
 	            p1.setString(2, form.getTitel());
+	            p1.setString(3, form.getKategorie());
+	            p1.setInt(4, 0);
 	            p1.executeUpdate();
 	            
 	        } catch (Exception ex){
@@ -142,7 +159,7 @@ public class VerkaufenServlet extends HttpServlet {
 	     */
 	    try (Connection con = ds.getConnection();
 	           
-	        PreparedStatement p2 = con.prepareStatement("CREATE TABLE " + table +" (id INTEGER , titel VARCHAR(50), beschreibung VARCHAR(200), zustand VARCHAR(50), preis VARCHAR(50))")){
+	        PreparedStatement p2 = con.prepareStatement("CREATE TABLE " + table +" (id INTEGER AUTO_INCREMENT PRIMARY KEY, titel VARCHAR(50), beschreibung VARCHAR(200), zustand VARCHAR(50), preis VARCHAR(50), kategorie VARCHAR(50), autor VARCHAR(50))")){
 	        
 	        p2.executeUpdate();
 	        
@@ -153,12 +170,14 @@ public class VerkaufenServlet extends HttpServlet {
 	     * und hier der erste Eintrag in diese Tabelle 
 	     */
         try (Connection con = ds.getConnection();
-                PreparedStatement p3 = con.prepareStatement("INSERT INTO " + table +" (titel, beschreibung, zustand, preis) VALUES (?,?,?,?)",generatedKeys)){
+                PreparedStatement p3 = con.prepareStatement("INSERT INTO " + table +" (titel, beschreibung, zustand, preis, kategorie, autor) VALUES (?,?,?,?,?,?)",generatedKeys)){
                 
                 p3.setString(1, form.getTitel());
                 p3.setString(2, form.getBeschreibung());
                 p3.setString(3, form.getZustand());
                 p3.setString(4, form.getPreis());
+                p3.setString(5, form.getKategorie());
+                p3.setString(6, form.getAutor());
                 p3.executeUpdate();
                 ResultSet rs = p3.getGeneratedKeys();
                 while (rs.next()) {
@@ -186,6 +205,28 @@ public class VerkaufenServlet extends HttpServlet {
               // TODO Auto-generated catch block
               throw new ServletException(ex.getMessage());
          }
+    }
+    
+    private void updateKat(){
+        
+        ResultSet rs = null;
+        
+        try(Connection con = ds.getConnection();
+                
+                PreparedStatement p = con.prepareStatement("SELECT * FROM bucher")){
+                
+                rs = p.executeQuery();
+                while(rs.next()){
+                    if (!kategorien.contains(rs.getString(3))){
+                    kategorien.add(rs.getString(3));
+                    katZahl=katZahl+1;
+                    }
+                }
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
 	/**
