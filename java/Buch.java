@@ -1,3 +1,4 @@
+/** Gülsen */
 public class Buch {
     private long id;
     private String titel;
@@ -5,6 +6,8 @@ public class Buch {
     private String zustand;
     private String beschreibung;
     private String Preis;
+    private String kategorie;
+    private String autor;
     
     public String getTitel() {
         return titel;
@@ -41,5 +44,17 @@ public class Buch {
     }
     public void setId(long id) {
         this.id = id;
+    }
+    public String getKategorie() {
+        return kategorie;
+    }
+    public void setKategorie(String kategorie) {
+        this.kategorie = kategorie;
+    }
+    public String getAutor() {
+        return autor;
+    }
+    public void setAutor(String autor) {
+        this.autor = autor;
     }
 }
